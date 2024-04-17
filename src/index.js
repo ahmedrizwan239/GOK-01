@@ -12,6 +12,7 @@ import SignIn from './views/auth';
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 
+// Routes
 const router = createBrowserRouter([
   {
     path: "/",
