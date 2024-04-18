@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 // React imports
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 // Chakra imports
 import {
@@ -27,6 +27,9 @@ import {
 import Layout from '../../layout'
 import ProductCard from "../../components/productCard";
 
+// Context import
+import { CartContext } from "../../context/cart-context"
+
 // Assets Import
 
 function Home() {
@@ -34,7 +37,8 @@ function Home() {
   // State variables
   const [products, setProducts] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
-
+  const { addToCart, getCartTotal } = useContext(CartContext);
+  
   // Function to fetch products
   async function fetchPrducts()
   {
@@ -43,7 +47,6 @@ function Home() {
       const data = await fetch(`https://fakestoreapi.com/products`)
       .then((res) => res.json());
       setProducts(data);
-      console.log(data);
     } 
     catch (error) {
       console.error('Error fetching products:', error);
@@ -68,6 +71,8 @@ function Home() {
           <ProductCard product={product} key={index} />
         ))}
         </SimpleGrid>
+        <Button onClick={() => {addToCart(products[0])}}>Add</Button>
+        <Text>{getCartTotal()} items in cart.</Text>
       </Flex>
 
     </Layout>

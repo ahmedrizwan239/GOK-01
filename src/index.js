@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import { ChakraProvider, theme } from '@chakra-ui/react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { CartProvider } from './context/cart-context';
 import Home from './views/home';
 import SignIn from './views/auth';
 
@@ -26,14 +27,15 @@ const router = createBrowserRouter([
 
 root.render(
   <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}>
-      <StrictMode>
-        <ColorModeScript />
-          <ChakraProvider theme={theme}>
-            <RouterProvider router={router} />
+    {/* <StrictMode> */}
+      <CartProvider>
+        <ChakraProvider theme={theme}>
+          <ColorModeScript />
+          <RouterProvider router={router} />
         </ChakraProvider>
-      </StrictMode>
+      </CartProvider>
+    {/* </StrictMode> */}
   </GoogleOAuthProvider>
-  
 );
 
 // If you want your app to work offline and load faster, you can change

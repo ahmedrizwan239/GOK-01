@@ -1,29 +1,17 @@
 // Chakra imports
 import {
   Box,
-  Button,
-  Container,
   Flex,
-  Avatar,
-  HStack,
   IconButton,
-  Image,
-  Link,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorMode,
   useColorModeValue,
-  useBreakpointValue,
-  Stack,
-  Text,
+  Link,
 } from '@chakra-ui/react';
 
 // Assets import
-import { FaMoon } from 'react-icons/fa';
+import { FaMoon, FaRegUser } from 'react-icons/fa';
+import { BsCart2 } from "react-icons/bs";
 import { HamburgerIcon, CloseIcon, SunIcon } from '@chakra-ui/icons';
 
 export default function Header() {
@@ -43,14 +31,33 @@ export default function Header() {
           </Box>
 
           {/* Dark Mode and Drawer */}
-          <Flex gap={2}>
-            <Button onClick={toggleColorMode} bg="none">
-              {colorMode === "light" ? <FaMoon /> : <SunIcon />}
-            </Button>
+          <Flex>
             <IconButton
-              size={'md'}
+            size={'lg'}
+            icon={colorMode === "light" ? <FaMoon /> : <SunIcon />}
+            aria-label={'Dark Mode'}
+            bg="none"
+            onClick={toggleColorMode} 
+            />
+            <IconButton
+              size={'lg'}
+              icon={<BsCart2 />}
+              aria-label={'Cart'}
+              bg="none"
+            />
+            <Link href="/profile">
+              <IconButton
+                size="lg"
+                icon={<FaRegUser />}
+                aria-label="Profile"
+                bg="none"
+              />
+            </Link>
+            <IconButton
+              size={'lg'}
               icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
               aria-label={'Open Menu'}
+              bg="none"
               display={{ md: 'none' }}
               onClick={isOpen ? onClose : onOpen}
             />
