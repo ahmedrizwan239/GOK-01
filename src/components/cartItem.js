@@ -8,17 +8,17 @@ import {
   CardHeader,
   Button
 } from '@chakra-ui/react';
-
+  
 // Assets Import
 import { cartIcon } from '@chakra-ui/icons'
 
-function ProductCard({product, onAdd}) {
+function cartItem({item, onDelete}) {
   return (
     <Card rounded="lg" shadow="lg" >
         <CardHeader p={0}>
         <Image
-          src={product.image}
-          alt={`Picture of ${product.title}`}
+          src={item.image}
+          alt={`Picture of ${item.title}`}
           roundedTop="lg"
           w={'full'}
           h={'250px'}
@@ -26,17 +26,17 @@ function ProductCard({product, onAdd}) {
         </CardHeader>
         <CardBody>
             <Text fontSize="md" fontWeight="semibold" as="h4" lineHeight="tight" noOfLines={2}>
-              {product.title}
+              {item.title}
             </Text>
             <Text fontSize="md" fontWeight="semibold" as="h4" lineHeight="tight" pt={4}>
-              ${product.price}
+              ${item.price}
             </Text>
         </CardBody>
         <CardFooter justifyContent={'center'}>
-            <Button colorScheme='teal' w={'full'} onClick={onAdd}>Add to cart</Button>
+            <Button colorScheme='red' w={'full'} onClick={onDelete}>Remove</Button>
         </CardFooter>
     </Card>
   );
 }
 
-export default ProductCard;
+export default cartItem

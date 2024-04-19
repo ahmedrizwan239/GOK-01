@@ -1,35 +1,31 @@
+// React imports
+import { useContext } from "react";
+
 // Chakra imports
 import {
   Box,
-  Button,
-  Container,
   Flex,
-  Avatar,
-  HStack,
   IconButton,
-  Image,
-  Link,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorMode,
   useColorModeValue,
-  useBreakpointValue,
-  Stack,
-  Text,
+  Link,
+  Icon,
 } from '@chakra-ui/react';
 
 // Assets import
-import { FaMoon } from 'react-icons/fa';
+import { FaMoon, FaRegUser } from 'react-icons/fa';
+import { BsCart2 } from "react-icons/bs";
 import { HamburgerIcon, CloseIcon, SunIcon } from '@chakra-ui/icons';
+
+// Context import
+import { CartContext } from "../context/cart-context"
 
 export default function Header() {
   
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { getTotalItems } = useContext(CartContext);
 
   return (
     <>
@@ -39,18 +35,42 @@ export default function Header() {
             
           {/* Logo   */}
           <Box>
+            <Link fontWeight={'bold'} fontSize={'xl'} href="/">
               GOK
+            </Link>
           </Box>
 
           {/* Dark Mode and Drawer */}
-          <Flex gap={2}>
-            <Button onClick={toggleColorMode} bg="none">
-              {colorMode === "light" ? <FaMoon /> : <SunIcon />}
-            </Button>
+          <Flex alignItems={'center'}>
             <IconButton
-              size={'md'}
+            size={'lg'}
+            icon={colorMode === "light" ? <FaMoon /> : <SunIcon />}
+            aria-label={'Dark Mode'}
+            bg="none"
+            onClick={toggleColorMode} 
+            />
+            <Link href="/profile">
+              <IconButton
+                size="lg"
+                icon={<FaRegUser />}
+                aria-label="Profile"
+                bg="none"
+              />
+            </Link>
+            <Link href="/cart">
+              <IconButton
+                size={'lg'}
+                icon={<BsCart2 />}
+                aria-label={'Cart'}
+                bg="none"
+              />
+            </Link>
+            ({getTotalItems()})
+            <IconButton
+              size={'lg'}
               icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
               aria-label={'Open Menu'}
+              bg="none"
               display={{ md: 'none' }}
               onClick={isOpen ? onClose : onOpen}
             />
