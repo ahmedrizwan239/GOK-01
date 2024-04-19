@@ -1,3 +1,6 @@
+// React imports
+import { useContext } from "react";
+
 // Chakra imports
 import {
   Box,
@@ -7,6 +10,7 @@ import {
   useColorMode,
   useColorModeValue,
   Link,
+  Icon,
 } from '@chakra-ui/react';
 
 // Assets import
@@ -14,10 +18,14 @@ import { FaMoon, FaRegUser } from 'react-icons/fa';
 import { BsCart2 } from "react-icons/bs";
 import { HamburgerIcon, CloseIcon, SunIcon } from '@chakra-ui/icons';
 
+// Context import
+import { CartContext } from "../context/cart-context"
+
 export default function Header() {
   
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { getTotalItems } = useContext(CartContext);
 
   return (
     <>
@@ -27,23 +35,19 @@ export default function Header() {
             
           {/* Logo   */}
           <Box>
+            <Link fontWeight={'bold'} fontSize={'xl'} href="/">
               GOK
+            </Link>
           </Box>
 
           {/* Dark Mode and Drawer */}
-          <Flex>
+          <Flex alignItems={'center'}>
             <IconButton
             size={'lg'}
             icon={colorMode === "light" ? <FaMoon /> : <SunIcon />}
             aria-label={'Dark Mode'}
             bg="none"
             onClick={toggleColorMode} 
-            />
-            <IconButton
-              size={'lg'}
-              icon={<BsCart2 />}
-              aria-label={'Cart'}
-              bg="none"
             />
             <Link href="/profile">
               <IconButton
@@ -53,6 +57,15 @@ export default function Header() {
                 bg="none"
               />
             </Link>
+            <Link href="/cart">
+              <IconButton
+                size={'lg'}
+                icon={<BsCart2 />}
+                aria-label={'Cart'}
+                bg="none"
+              />
+            </Link>
+            ({getTotalItems()})
             <IconButton
               size={'lg'}
               icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}

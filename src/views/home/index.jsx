@@ -37,7 +37,7 @@ function Home() {
   // State variables
   const [products, setProducts] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
-  const { addToCart, getCartTotal } = useContext(CartContext);
+  const { addToCart } = useContext(CartContext);
   
   // Function to fetch products
   async function fetchPrducts()
@@ -68,11 +68,9 @@ function Home() {
 
         <SimpleGrid columns={4} gap={8}>
         {products.map((product, index) => (
-          <ProductCard product={product} key={index} />
+          <ProductCard product={product} key={index} onAdd={() => addToCart(product)} />
         ))}
         </SimpleGrid>
-        <Button onClick={() => {addToCart(products[0])}}>Add</Button>
-        <Text>{getCartTotal()} items in cart.</Text>
       </Flex>
 
     </Layout>

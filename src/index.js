@@ -9,6 +9,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { CartProvider } from './context/cart-context';
 import Home from './views/home';
 import SignIn from './views/auth';
+import Cart from './views/cart';
 
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <SignIn />,
+  },
+  {
+    path: "/cart",
+    element: <Cart />,
   },
 ]);
 
