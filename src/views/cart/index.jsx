@@ -10,6 +10,7 @@ import {
   Heading,
   SimpleGrid,
   Text,
+  Link
 } from "@chakra-ui/react";
 
 // Custom components
@@ -50,10 +51,10 @@ function Cart() {
         } 
 
         {cartItems.length > 0 &&
-        <>
+        <Flex mb={8} w={'full'} flexDir={'column'} justifyContent={'center'}>
           <Text py={4} mx={'auto'}>Your total amount is : ${getCartTotal()}</Text>
-          <Button colorScheme="teal" mb={8} w={{base:'full', sm:'60%', lg:'30%'}} mx={'auto'}>Checkout</Button>
-        </>
+          <Link href='/checkout' mx={'auto'} w={{base:'full', sm:'60%', lg:'30%'}}><Button colorScheme="teal" w={'full'}>Checkout</Button></Link>
+        </Flex>
         }
 
       </Flex>
