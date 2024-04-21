@@ -10,7 +10,6 @@ import {
   useColorMode,
   useColorModeValue,
   Link,
-  Icon,
 } from '@chakra-ui/react';
 
 // Assets import

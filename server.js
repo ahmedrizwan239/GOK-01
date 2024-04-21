@@ -1,9 +1,10 @@
 const express = require('express')
 const cors = require('cors');
+let dotenv = require('dotenv').config()
 const app = express()
 const port = process.env.PORT || 8000
 
-const stripe = require("stripe")("sk_test_51P66u5HcKVmeXxjkwRVTzrNPRtbwduVtYqSLJLZ8Mc9ktUl7KT7iVe3MIeO2xkbbpxjqwNg1jWEjRC2sYuMZolSq00xgp55p3A");
+const stripe = require("stripe")(process.env.REACT_APP_STRIPE_SECRET_KEY);
 
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cors()); // Enable CORS for all routes
