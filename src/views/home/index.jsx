@@ -8,6 +8,7 @@ import {
   Flex,
   Heading,
   SimpleGrid,
+  useToast
 } from "@chakra-ui/react";
 
 // Custom components
@@ -24,6 +25,7 @@ function Home() {
   // State variables
   const [products, setProducts] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
+  const toast = useToast();
   const { addToCart } = useContext(CartContext);
   
   // Function to fetch products
@@ -40,6 +42,20 @@ function Home() {
     }
   }
 
+  // Function to fetch products
+  async function handleAdd(product)
+  {
+    addToCart(product);
+    toast({
+      title: "Product added!",
+      description: `Added to cart successfully`,
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+    });
+  }
+
+
   useEffect(()=>{
     fetchPrducts();
   }, []);
@@ -55,7 +71,7 @@ function Home() {
 
         <SimpleGrid columns={4} gap={8}>
         {products.map((product, index) => (
-          <ProductCard product={product} key={index} onAdd={() => addToCart(product)} />
+          <ProductCard product={product} key={index} onAdd={() => handleAdd(product)} />
         ))}
         </SimpleGrid>
       </Flex>
