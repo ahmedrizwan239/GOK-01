@@ -5,22 +5,9 @@ import React, { useEffect, useState, useContext } from "react";
 
 // Chakra imports
 import {
-  Avatar,
-  Box,
-  Button,
-  Checkbox,
   Flex,
-  FormControl,
-  FormLabel,
   Heading,
-  Icon,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Link,
   SimpleGrid,
-  Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
 
 // Custom components

@@ -10,6 +10,8 @@ import { CartProvider } from './context/cart-context';
 import Home from './views/home';
 import SignIn from './views/auth';
 import Cart from './views/cart';
+import Checkout from './views/checkout';
+import Success from './views/order';
 
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
@@ -27,6 +29,14 @@ const router = createBrowserRouter([
   {
     path: "/cart",
     element: <Cart />,
+  },
+  {
+    path: "/checkout",
+    element: <Checkout />,
+  },
+  {
+    path: "/success",
+    element: <Success />,
   },
 ]);
 
