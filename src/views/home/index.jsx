@@ -8,7 +8,8 @@ import {
   Flex,
   Heading,
   SimpleGrid,
-  useToast
+  useToast,
+  Spinner
 } from "@chakra-ui/react";
 
 // Custom components
@@ -40,6 +41,7 @@ function Home() {
     catch (error) {
       console.error('Error fetching products:', error);
     }
+    setIsFetching(false);
   }
 
   // Function to fetch products
@@ -69,10 +71,14 @@ function Home() {
           Featured Collection
         </Heading>
 
-        <SimpleGrid columns={4} gap={8}>
-        {products.map((product, index) => (
-          <ProductCard product={product} key={index} onAdd={() => handleAdd(product)} />
-        ))}
+        <SimpleGrid columns={{base: 1, sm: 2, md: 3, lg: 4}} gap={8}>
+        {isFetching? 
+          <Spinner color="teal" /> 
+          : 
+          products.map((product, index) => (
+            <ProductCard product={product} key={index} onAdd={() => handleAdd(product)} />
+          ))
+        }
         </SimpleGrid>
       </Flex>
 

@@ -12,6 +12,7 @@ import SignIn from './views/auth';
 import Cart from './views/cart';
 import Checkout from './views/checkout';
 import Success from './views/order';
+import { UserProvider } from './context/user-context';
 
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
@@ -44,10 +45,12 @@ root.render(
   <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID}>
     {/* <StrictMode> */}
       <CartProvider>
-        <ChakraProvider theme={theme}>
-          <ColorModeScript />
-          <RouterProvider router={router} />
-        </ChakraProvider>
+        <UserProvider>
+          <ChakraProvider theme={theme}>
+            <ColorModeScript />
+            <RouterProvider router={router} />
+          </ChakraProvider>
+        </UserProvider>
       </CartProvider>
     {/* </StrictMode> */}
   </GoogleOAuthProvider>

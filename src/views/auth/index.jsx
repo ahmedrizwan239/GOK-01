@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 // React imports
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 // Google Auth imports
 import { GoogleLogin, googleLogout, useGoogleLogin } from '@react-oauth/google';
@@ -32,6 +32,9 @@ import { FcGoogle } from "react-icons/fc";
 import { MdRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 
+// Context import
+import { UserContext } from "../../context/user-context"
+
 function SignIn() {
   // Chakra color mode
   const textColor = useColorModeValue("navy.700", "white");
@@ -52,8 +55,9 @@ function SignIn() {
 
   // State variables
   const [show, setShow] = useState(false);
-  const [user, setUser] = useState([]);
-  const [profile, setProfile] = useState(null);
+  const [user, setUser] = useState(null);
+  const { userInfo, saveUser, logoutUser } = useContext(UserContext);
+  const [profile, setProfile] = useState(userInfo);
 
   // Login function
   const login = useGoogleLogin({
@@ -65,6 +69,7 @@ function SignIn() {
   const logOut = () => {
       googleLogout();
       setProfile(null);
+      logoutUser();
   };
 
   // Function to fetch user profile
@@ -83,6 +88,7 @@ function SignIn() {
         }
         const data = await response.json();
         setProfile(data);
+        saveUser(data);
       } 
       catch (error) {
         console.error('Error fetching profile:', error);
