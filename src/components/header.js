@@ -10,6 +10,7 @@ import {
   useColorMode,
   useColorModeValue,
   Link,
+  Avatar,
 } from '@chakra-ui/react';
 
 // Assets import
@@ -19,12 +20,14 @@ import { HamburgerIcon, CloseIcon, SunIcon } from '@chakra-ui/icons';
 
 // Context import
 import { CartContext } from "../context/cart-context"
+import { UserContext } from "../context/user-context"
 
 export default function Header() {
   
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { getTotalItems } = useContext(CartContext);
+  const { userInfo } = useContext(UserContext);
 
   return (
     <>
@@ -32,7 +35,7 @@ export default function Header() {
 
         <Flex py={4} w={'80%'} mx={'auto'} alignItems={'center'} justifyContent={'space-between'}>
             
-          {/* Logo   */}
+          {/* Logo */}
           <Box>
             <Link fontWeight={'bold'} fontSize={'xl'} href="/">
               GOK
@@ -49,12 +52,17 @@ export default function Header() {
             onClick={toggleColorMode} 
             />
             <Link href="/profile">
-              <IconButton
-                size="lg"
-                icon={<FaRegUser />}
-                aria-label="Profile"
-                bg="none"
-              />
+              {userInfo ? 
+                <Avatar src={userInfo.picture} name={userInfo.name} size={'xs'} />
+              : 
+                <IconButton
+                  size="lg"
+                  icon={<FaRegUser />}
+                  aria-label="Profile"
+                  bg="none"
+                />
+              }
+              
             </Link>
             <Link href="/cart">
               <IconButton

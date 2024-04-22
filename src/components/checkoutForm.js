@@ -44,14 +44,18 @@ function CheckoutForm() {
           confirmParams: {
               return_url: successUrl
           },
+          redirect: "if_required",
         });
-    
+        
         if (result.error) {
           console.error(result.error.message);
         } else {
           // Payment was successful, clear the cart
           clearCart();
           console.log("Payment successful!");
+
+          // Redirect manually to the success URL
+          window.location.href = successUrl;
         }
       } catch (error) {
         console.error("An unexpected error occurred:", error);

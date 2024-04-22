@@ -49,7 +49,7 @@ function Checkout() {
       // Set the client secret received from the server
       setClientSecret(clientSecret); 
     } catch (error) {
-      console.error("Error fetching PaymentIntent client secret:", error);
+      console.log("Error fetching PaymentIntent client secret:", error);
     }
   };
 
@@ -61,7 +61,7 @@ function Checkout() {
   return (
     <Layout>
 
-      {/* ------- Featured Products --------- */}
+      {/* ------- Checkout Page --------- */}
       <Flex w="80%" mx="auto" mt={16} mb={16} gap={6} flexDir="column">
         <Heading as='h4' size='md'>
           Checkout

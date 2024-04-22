@@ -40,7 +40,7 @@ function Cart() {
         </Heading>
 
         {cartItems.length > 0 ? 
-          (<SimpleGrid columns={4} gap={8}>
+          (<SimpleGrid columns={{base: 1, sm: 2, md: 3, lg: 4}} gap={8}>
           {cartItems.map((item, index) => (
             <CartItem item={item} key={index} onDelete= {() => removeFromCart(item)}/>
           ))}
