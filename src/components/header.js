@@ -53,7 +53,7 @@ export default function Header() {
             />
             <Link href="/profile">
               {userInfo ? 
-                <Avatar src={userInfo.picture} name={userInfo.name} size={'xs'} />
+                <Avatar src={userInfo.picture || userInfo.image} name={userInfo.name || userInfo.firstName + ' ' + userInfo.lastName} size={'xs'} />
               : 
                 <IconButton
                   size="lg"

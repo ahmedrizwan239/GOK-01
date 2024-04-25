@@ -13,27 +13,29 @@ import {
   Button,
   Checkbox,
   Flex,
-  FormControl,
   FormLabel,
   Heading,
   Icon,
   Input,
-  InputGroup,
-  InputRightElement,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 
+// Formik imports
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from 'yup';
+
 // Custom components
 import { HSeparator } from "../../components/separator/Separator";
+import InputField from "../../components/InputField"
+import PasswordField from "../../components/PasswordField"
 
 // Assets Import
 import { FcGoogle } from "react-icons/fc";
-import { MdRemoveRedEye } from "react-icons/md";
-import { RiEyeCloseLine } from "react-icons/ri";
 
 // Context import
 import { UserContext } from "../../context/user-context"
+
 
 function SignIn() {
   // Chakra color mode
@@ -41,8 +43,7 @@ function SignIn() {
   const textColorSecondary = "gray.400";
   const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
   const textColorBrand = useColorModeValue("brand.500", "white");
-  const brandStars = useColorModeValue("brand.500", "brand.400");
-  const googleBg = useColorModeValue("secondaryGray.300", "whiteAlpha.200");
+  const googleBg = useColorModeValue("gray.200", "whiteAlpha.200");
   const googleText = useColorModeValue("navy.700", "white");
   const googleHover = useColorModeValue(
     { bg: "gray.200" },
@@ -53,14 +54,25 @@ function SignIn() {
     { bg: "whiteAlpha.200" }
   );
 
+  // Validation Schema
+  const validationSchema = Yup.object().shape({
+     username: Yup.string().required('Email is required'),
+     password: Yup.string().required('Password is required'),
+  });
+
+  const initialValues = {
+    username: '',
+    password: '' 
+  }
+
   // State variables
-  const [show, setShow] = useState(false);
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { userInfo, saveUser, logoutUser } = useContext(UserContext);
   const [profile, setProfile] = useState(userInfo);
 
   // Login function
-  const login = useGoogleLogin({
+  const LoginGoogle = useGoogleLogin({
       onSuccess: (codeResponse) => setUser(codeResponse),
       onError: (error) => console.log('Login Failed:', error)
   });
@@ -94,6 +106,29 @@ function SignIn() {
         console.error('Error fetching profile:', error);
       }
     }
+  }
+
+  // Function to login user via auth API
+  async function Login(values)
+  {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`https://dummyjson.com/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile');
+      }
+      const data = await response.json();
+      setProfile(data);
+      saveUser(data);
+    } 
+    catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -151,7 +186,7 @@ function SignIn() {
             _hover={googleHover}
             _active={googleActive}
             _focus={googleActive}
-            onClick={login}>
+            onClick={LoginGoogle}>
             <Icon as={FcGoogle} w='20px' h='20px' me='10px' />
             Sign in with Google
           </Button>
@@ -162,89 +197,57 @@ function SignIn() {
             </Text>
             <HSeparator />
           </Flex>
-          <FormControl>
-            <FormLabel
-              display='flex'
-              ms='4px'
-              fontSize='sm'
-              fontWeight='500'
-              color={textColor}
-              mb='8px'>
-              Email<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-              isRequired={true}
-              variant='auth'
-              fontSize='sm'
-              ms={{ base: "0px", md: "0px" }}
-              type='email'
-              placeholder='mail@simmmple.com'
-              mb='24px'
-              fontWeight='500'
-              size='lg'
-            />
-            <FormLabel
-              ms='4px'
-              fontSize='sm'
-              fontWeight='500'
-              color={textColor}
-              display='flex'>
-              Password<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <InputGroup size='md'>
-              <Input
-                isRequired={true}
-                fontSize='sm'
-                placeholder='Min. 8 characters'
-                mb='24px'
-                size='lg'
-                type={show ? "text" : "password"}
-                variant='auth'
-              />
-              <InputRightElement display='flex' alignItems='center' mt='4px'>
-                <Icon
-                  color={textColorSecondary}
-                  _hover={{ cursor: "pointer" }}
-                  as={show ? RiEyeCloseLine : MdRemoveRedEye}
-                  onClick={() => setShow(!show)}
-                />
-              </InputRightElement>
-            </InputGroup>
-            <Flex justifyContent='space-between' align='center' mb='24px'>
-              <FormControl display='flex' alignItems='center'>
-                <Checkbox
-                  id='remember-login'
-                  colorScheme='brandScheme'
-                  me='10px'
-                />
-                <FormLabel
-                  htmlFor='remember-login'
-                  mb='0'
-                  fontWeight='normal'
-                  color={textColor}
-                  fontSize='sm'>
-                  Keep me logged in
-                </FormLabel>
-              </FormControl>
-              {/* <NavLink to='/auth/forgot-password'> */}
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={values => {
+              Login(values);
+            }}
+          >
+          {({ errors, touched, values }) => (
+            <Form>
+              <InputField fieldName={'username'} label='Username' placeholder="Enter username" type='text' extra={'*'} size='lg' bg={googleBg} fontSize='sm' variant='auth' form />
+              <PasswordField fieldName={'password'} label='Password' placeholder="Min. 8 characters" extra={'*'} size='lg' bg={googleBg} fontSize='sm' variant='auth' form />
+              
+              <Flex justifyContent='space-between' align='center' mb='24px'>
+                <Flex>
+                  <Checkbox
+                    id='remember-login'
+                    me='10px'
+                  />
+                  <FormLabel
+                    htmlFor='remember-login'
+                    mb='0'
+                    fontWeight='normal'
+                    color={textColor}
+                    fontSize='sm'>
+                    Keep me logged in
+                  </FormLabel>
+                </Flex>
                 <Text
                   color={textColorBrand}
                   fontSize='sm'
-                  w='124px'
                   fontWeight='500'>
                   Forgot password?
                 </Text>
-              {/* </NavLink> */}
-            </Flex>
-            <Button
-              fontSize='sm'
-              fontWeight='500'
-              w='100%'
-              h='50'
-              mb='24px'>
-              Sign In
-            </Button>
-          </FormControl>
+              </Flex>
+              <Button
+                fontSize='sm'
+                fontWeight='500'
+                w='100%'
+                h='50'
+                mb='24px'
+                bg={'#7551ff'}
+                color={'white'}
+                _hover={{bg: '#7551ff'}}
+                type="submit"
+                isLoading={isLoading}
+                >
+                Sign In
+              </Button>
+            </Form>
+            )}
+          </Formik>
           <Flex
             flexDirection='column'
             justifyContent='center'
@@ -303,63 +306,27 @@ function SignIn() {
             mx={{ base: "auto", lg: "unset" }}
             me='auto'
             mb={{ base: "20px", md: "auto" }}>
-            <Avatar src={profile.picture} size={'lg'} name={profile.name} mb={8} alignSelf={'center'} />
+            <Avatar src={profile.picture || profile.image} size={'lg'} name={profile.name} mb={8} alignSelf={'center'} />
             <Flex align='center' mb='25px'>
               <HSeparator />
             </Flex>
-            <FormControl>
-              <FormLabel
-                display='flex'
-                ms='4px'
-                fontSize='sm'
-                fontWeight='500'
-                color={textColor}
-                mb='8px'>
-                Name
-              </FormLabel>
-              <Input
-                variant='auth'
-                fontSize='sm'
-                ms={{ base: "0px", md: "0px" }}
-                type='text'
-                placeholder='mail@simmmple.com'
-                mb='24px'
-                fontWeight='500'
-                size='lg'
-                defaultValue={profile.name}
-                readOnly
-              />
-              <FormLabel
-                ms='4px'
-                fontSize='sm'
-                fontWeight='500'
-                color={textColor}
-                display='flex'>
-                Email
-              </FormLabel>
-              <Input
-                variant='auth'
-                fontSize='sm'
-                ms={{ base: "0px", md: "0px" }}
-                type='text'
-                placeholder='mail@simmmple.com'
-                mb='24px'
-                fontWeight='500'
-                size='lg'
-                defaultValue={profile.email}
-                readOnly
-              />
-              
-              <Button
-                fontSize='sm'
-                fontWeight='500'
-                w='100%'
-                h='50'
-                mb='24px'
-                onClick={logOut}>
-                Sign Out
-              </Button>
-            </FormControl>
+            
+            <InputField fieldName={'name'} label='Name' placeholder="Enter name" type='text' size='lg' bg={googleBg} fontSize='sm' variant='auth' defaultValue={profile.name || profile.firstName + ' ' + profile.lastName} readOnly />
+            <InputField fieldName={'email'} label='Email' placeholder="Enter email" type='text' size='lg' bg={googleBg} fontSize='sm' variant='auth' defaultValue={profile.email} readOnly />
+            
+            <Button
+              fontSize='sm'
+              fontWeight='500'
+              w='100%'
+              h='50'
+              mb='24px'
+              bg={'#7551ff'}
+              color={'white'}
+              _hover={{bg: '#7551ff'}}
+              onClick={logOut}>
+              Sign Out
+            </Button>
+
           </Flex>
         </Flex>
       )
